@@ -15,7 +15,7 @@ class _PagerState extends State<Pager> {
   Future<List<String>> pages;
   Random generator;
   int currentPage, random;
-  static const double _fontSize = 13.0;
+  double _fontSize = 13.0;
   Size _size;
 
   _PagerState(this._content, this._size);
@@ -23,10 +23,11 @@ class _PagerState extends State<Pager> {
   @override
   void initState() {
     super.initState();
-    pages = divideContent(_content);
+    //pages = divideContent(_content);
     currentPage = 0;
     generator = Random();
     random = (generator.nextInt(9) + 1);
+    print(getLineHeight().toString());
   }
 
   @override
@@ -46,29 +47,39 @@ class _PagerState extends State<Pager> {
     ));
   }
 
-  Future<List<String>> divideContent(String content) async{
+  Future<List<String>> divideContent(String content) async {
     List<String> _pages = [];
     List<String> _words = content.split(' ');
     String _text = "";
     double _maxWidth = _size.width - 20.0;
 
     TextPainter textPainter = TextPainter(
-        text: TextSpan(text: _text , style: TextStyle(fontSize: _fontSize)),
+        text: TextSpan(text: _text, style: TextStyle(fontSize: _fontSize)),
         textAlign: TextAlign.justify,
         textDirection: TextDirection.ltr,
-        maxLines: (_size.height / (_fontSize+3)).floor())
-    ..layout(maxWidth: _maxWidth);
+        maxLines: (_size.height / getLineHeight()).floor())
+      ..layout(maxWidth: _maxWidth);
 
-    while(_words.isNotEmpty){
+    while (_words.isNotEmpty) {
       _text += _words.removeAt(0) + " ";
-      textPainter.text = TextSpan(text: _text, style: TextStyle(fontSize: _fontSize));
+      textPainter.text =
+          TextSpan(text: _text, style: TextStyle(fontSize: _fontSize));
       textPainter.layout(maxWidth: _maxWidth);
-      if(textPainter.didExceedMaxLines){
+      if (textPainter.didExceedMaxLines) {
         _pages.add(_text);
         _text = "";
       }
     }
     return _pages;
+  }
+
+  double getLineHeight(){
+    TextPainter textPainter = TextPainter(
+      text: TextSpan(text: "Text", style: TextStyle(fontSize: _fontSize)),
+      textDirection: TextDirection.ltr,
+      textAlign: TextAlign.justify,
+    )..layout();
+    return textPainter.height;
   }
 
   @override
@@ -112,5 +123,8 @@ class _PagerState extends State<Pager> {
         }
       }
     );
+    /* return Center(
+      child: Text("Debug session!"),
+    ); */
   }
 }
