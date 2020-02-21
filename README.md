@@ -1,6 +1,6 @@
-# epub
+# E-reader
 
-A new Flutter project.
+Simple e-reader built with flutter.
 
 ## Getting Started
 
